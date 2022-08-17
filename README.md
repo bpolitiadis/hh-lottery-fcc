@@ -1,0 +1,1 @@
+Sample smart contract lottery app
