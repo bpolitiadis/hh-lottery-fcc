@@ -15,7 +15,7 @@ import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 error DeKino__NotEnoughETHEntered();
 error DeKino__TransferFailed();
 error DeKino__NotOpen();
-error DeKino__UpKeedNotNeeded(uint256 currentBalance, uint256 numPlayers, uint256 deKinoState);
+error DeKino__UpKeepNotNeeded(uint256 currentBalance, uint256 numPlayers, uint256 deKinoState);
 
 /**@title A sample Lottery Contract
  * @author vpo24
@@ -120,7 +120,7 @@ contract DeKino is VRFConsumerBaseV2, KeeperCompatibleInterface {
         // 2 transactions process
         (bool upkeepNeeded, ) = checkUpkeep("");
         if (!upkeepNeeded) {
-            revert DeKino__UpKeedNotNeeded(
+            revert DeKino__UpKeepNotNeeded(
                 address(this).balance,
                 s_players.length,
                 uint256(s_deKinoState)

@@ -15,7 +15,7 @@ const RINKEBY_RPC_URL = process.env.RINKEBY_RPC_URL;
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
     solidity: {
-        compilers: [{ version: "0.8.8" }, { version: "0.8.0" }],
+        compilers: [{ version: "0.8.8" }],
     },
     namedAccounts: {
         deployer: {
@@ -43,11 +43,20 @@ module.exports = {
         },
         hardhat: {
             chainId: 31337,
-            blockConfirmations: 1,
         },
         localhost: {
             chainId: 31337,
             //acounts : already in
         },
+    },
+    gasReporter: {
+        enabled: false,
+        outputFile: "gas-report.txt",
+        noColors: true,
+        currency: "USD",
+        coinmarketcap: CMC_API_KEY,
+    },
+    etherscan: {
+        apiKey: ETHERSCAN_API_KEY,
     },
 };
