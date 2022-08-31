@@ -106,7 +106,7 @@ const { describe } = require("node:test");
               });
           });
 
-          describe("performUpkeed", function () {
+          describe("performUpkeep", function () {
               it("it can only run if checkUpkeep is true", async () => {
                   await deKinoContract.enterDeKino({ value: deKinoEntranceFee });
                   await network.provider.send("evm_increaseTime", [interval.toNumber() + 1]);
@@ -119,5 +119,26 @@ const { describe } = require("node:test");
                       "DeKino__UpKeepNotNeeded"
                   );
               });
+              it("updates the lottery state, emits the event, and calls vrf coordinator", async () => {
+                  await deKinoContract.enterDeKino({ value: deKinoEntranceFee });
+                  await network.provider.send("evm_increaseTime", [interval.toNumber() + 1]);
+                  await network.provider.request({ method: "evm_mine", params: [] });
+                  const txResponse = await deKinoContract.performUpkeep([]);
+                  const txReceipt = await txResponse.wait(1);
+                  const requestId = txReceipt.events[1].args.requestId;
+                  const deKinoState = await deKinoContract.getDeKinoState();
+                  assert(requestId.toNumber() > 0);
+                  assert(deKinoState.toString() == "1");
+              });
+          });
+
+          describe("fulfillRandomWords", function () {
+              beforeEach(async () => {
+                  await deKinoContract.enterDeKino({ value: deKinoEntranceFee });
+                  await network.provider.send("evm_increaseTime", [interval.toNumber() + 1]);
+                  await network.provider.request({ method: "evm_mine", params: [] });
+              });
+              it("can only be called after performupkeep", async () => {});
+              it("picks a winner, resets, and sends money", async () => {});
           });
       });

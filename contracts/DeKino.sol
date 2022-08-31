@@ -134,6 +134,7 @@ contract DeKino is VRFConsumerBaseV2, KeeperCompatibleInterface {
             i_callbackGasLimit, //callback gas limit
             NUM_WORDS //number of random numbers
         );
+        //this event is redundant!
         emit RequestDeKinoWinner(requestId);
     }
 
