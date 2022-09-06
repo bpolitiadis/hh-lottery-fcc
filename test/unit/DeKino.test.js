@@ -1,7 +1,7 @@
 const { developmentChains, networkConfig } = require("../../helper-hardhat-config");
 const { ethers, network, deployments } = require("hardhat");
 const { assert, expect } = require("chai");
-const { describe } = require("node:test");
+//const { describe } = require("node:test");
 
 !developmentChains.includes(network.name)
     ? describe.skip
@@ -66,10 +66,7 @@ const { describe } = require("node:test");
                   await deKinoContract.performUpkeep([]); // changes the state to calculating for our comparison below
                   await expect(
                       deKinoContract.enterDeKino({ value: deKinoEntranceFee })
-                  ).to.be.revertedWith(
-                      // is reverted as lottery is calculating
-                      "DeKino__NotOpen"
-                  );
+                  ).to.be.revertedWith("DeKino__NotOpen");
               });
           });
 
@@ -132,13 +129,79 @@ const { describe } = require("node:test");
               });
           });
 
+          // This test simulates users entering the raffle and wraps the entire functionality of the raffle
+          // inside a promise that will resolve if everything is successful.
+          // An event listener for the WinnerPicked is set up
+          // Mocks of chainlink keepers and vrf coordinator are used to kickoff this winnerPicked event
+          // All the assertions are done once the WinnerPicked event is fired
           describe("fulfillRandomWords", function () {
               beforeEach(async () => {
                   await deKinoContract.enterDeKino({ value: deKinoEntranceFee });
                   await network.provider.send("evm_increaseTime", [interval.toNumber() + 1]);
                   await network.provider.request({ method: "evm_mine", params: [] });
               });
-              it("can only be called after performupkeep", async () => {});
-              it("picks a winner, resets, and sends money", async () => {});
+              it("can only be called after performupkeep", async () => {
+                  await expect(
+                      vrfCoordinatorV2Mock.fulfillRandomWords(0, deKinoContract.address) // reverts if not fulfilled
+                  ).to.be.revertedWith("nonexistent request");
+                  await expect(
+                      vrfCoordinatorV2Mock.fulfillRandomWords(1, deKinoContract.address) // reverts if not fulfilled
+                  ).to.be.revertedWith("nonexistent request");
+              });
+              it("picks a winner, resets, and sends money", async () => {
+                  const additionalEntrances = 3; // to test
+                  const startingIndex = 2;
+                  for (let i = startingIndex; i < startingIndex + additionalEntrances; i++) {
+                      deKino = deKinoContract.connect(accounts[i]); // Returns a new instance of the deKino contract connected to player
+                      await deKino.enterDeKino({ value: deKinoEntranceFee });
+                  }
+                  const startingTimeStamp = await deKino.getLastTimeStamp(); // stores starting timestamp (before we fire our event)
+
+                  // This will be more important for our staging tests...
+                  await new Promise(async (resolve, reject) => {
+                      deKino.once("WinnerPicked", async () => {
+                          // event listener for WinnerPicked
+                          console.log("WinnerPicked event fired!");
+
+                          // assert throws an error if it fails, so we need to wrap
+                          // it in a try/catch so that the promise returns event
+                          // if it fails.
+                          try {
+                              // Now lets get the ending values...
+                              const recentWinner = await deKino.getRecentWinner();
+                              const deKinoState = await deKino.getDeKinoState();
+                              const winnerBalance = await accounts[2].getBalance();
+                              const endingTimeStamp = await deKino.getLastTimeStamp();
+                              await expect(deKino.getPlayer(0)).to.be.reverted;
+                              // Comparisons to check if our ending values are correct:
+                              assert.equal(recentWinner.toString(), accounts[2].address);
+                              assert.equal(deKinoState, 0);
+                              assert.equal(
+                                  winnerBalance.toString(),
+                                  startingBalance // startingBalance + ( (deKinoEntranceFee * additionalEntrances) + deKinoEntranceFee )
+                                      .add(
+                                          deKinoEntranceFee
+                                              .mul(additionalEntrances)
+                                              .add(deKinoEntranceFee)
+                                      )
+                                      .toString()
+                              );
+                              assert(endingTimeStamp > startingTimeStamp);
+                              resolve(); // if try passes, resolves the promise
+                          } catch (e) {
+                              reject(e); // if try fails, rejects the promise
+                          }
+                      });
+
+                      // kick off the event by mocking the chainlink keepers and vrf coordinator
+                      const tx = await deKino.performUpkeep("0x");
+                      const txReceipt = await tx.wait(1);
+                      const startingBalance = await accounts[2].getBalance();
+                      await vrfCoordinatorV2Mock.fulfillRandomWords(
+                          txReceipt.events[1].args.requestId,
+                          deKino.address
+                      );
+                  });
+              });
           });
       });

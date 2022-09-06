@@ -6,6 +6,10 @@ require("hardhat-gas-reporter");
 require("hardhat-contract-sizer");
 require("dotenv").config();
 
+/**
+ * @type import('hardhat/config').HardhatUserConfig
+ */
+
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL;
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 const DEV_PRIVATE_KEY = process.env.DEV_PRIVATE_KEY;
@@ -42,11 +46,14 @@ module.exports = {
             gasPrice: 8000000000,
         },
         hardhat: {
+             // // If you want to do some forking, uncomment this
+            // forking: {
+            //   url: MAINNET_RPC_URL
+            // }
             chainId: 31337,
         },
         localhost: {
             chainId: 31337,
-            //acounts : already in
         },
     },
     gasReporter: {
@@ -58,5 +65,8 @@ module.exports = {
     },
     etherscan: {
         apiKey: ETHERSCAN_API_KEY,
+    },
+    mocha: {
+        timeout: 500000, // 500 seconds max for running tests
     },
 };

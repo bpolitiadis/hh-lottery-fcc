@@ -48,11 +48,16 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         await vrfCoordinatorV2Mock.addConsumer(subscriptionId.toNumber(), deKino.address);
     }
 
-    //verify contract on etherscan
-    if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
-        await verify(fundMe.address, [ethUsdPriceFeedAddress]);
+     // Verify the deployment
+     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
+        log("Verifying...")
+        await verify(deKino.address, args)
     }
-    log("------------------------------");
+
+    log("Enter lottery with command:")
+    const networkName = network.name == "hardhat" ? "localhost" : network.name
+    log(`yarn hardhat run scripts/enterRaffle.js --network ${networkName}`)
+    log("----------------------------------------------------")
 };
 
 module.exports.tags = ["all", "dekino"];
