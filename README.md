@@ -27,7 +27,7 @@
 </details> -->
 
 # DeKino Decentralized Lottery
-DeKino is a sample project implementing a smart contract lottery system, developed in the context of the [Full Stack Web3 Development with JavaScript – 32-Hour Course](https://www.youtube.com/watch?v=gyMwXuJrbJQ&t=49271s)
+DeKino is a sample project implementing a smart contract lottery system, developed in the context of the [Full Stack Web3 Development with JavaScript – 32-Hour Course](https://www.youtube.com/watch?v=gyMwXuJrbJQ)
 #
 
 <!-- ABOUT THE PROJECT -->
@@ -35,7 +35,7 @@ DeKino is a sample project implementing a smart contract lottery system, develop
 
 DeKino was developed using the Hardhat suite to deploy and test the smart contract. It consists of the contract DeKino.sol which allows user to send funds and participate in the lottery draw. The winner will be automatically determined using the Chainlink VRF to get an off-chain random number. Chainlink Keepers is used to trigger the draw automatically based on a time interval if the lottery has at least one participant.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<!-- <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
 
 
 <!-- 
@@ -71,7 +71,7 @@ Clone and build the repo
    cd hh-lottery-fcc
    yarn
    ```
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<!-- <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -85,14 +85,14 @@ Test:
 yarn hardhat test
 ```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<!-- <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
 
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<!-- <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
@@ -100,4 +100,4 @@ Distributed under the MIT License.
 This project is built for educational purposes only and has been tested only in local enviroment and the Goerli Testnet.
 
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<!-- <p align="right">(<a href="#readme-top">back to top</a>)</p> -->
