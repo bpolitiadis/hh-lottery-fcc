@@ -1,7 +1,6 @@
 const { developmentChains, networkConfig } = require("../../helper-hardhat-config");
 const { ethers, network, deployments } = require("hardhat");
 const { assert, expect } = require("chai");
-//const { describe } = require("node:test");
 
 !developmentChains.includes(network.name)
     ? describe.skip
@@ -15,9 +14,8 @@ const { assert, expect } = require("chai");
           const chainId = network.config.chainId;
 
           beforeEach(async () => {
-              //deployer = (await getNamedAccounts()).deployer;
               accounts = await ethers.getSigners(); // could also do with getNamedAccounts
-              deployer = accounts[0];
+              deployer = accounts[0]; //or deployer = (await getNamedAccounts()).deployer;
               player = accounts[1];
               await deployments.fixture(["all", "mocks"]); // deploy everything
               deKinoContract = await ethers.getContract("DeKino", deployer);
@@ -31,7 +29,7 @@ const { assert, expect } = require("chai");
           describe("constructor", function () {
               it("initializes the lottery correctly", async () => {
                   // Ideally, we'd separate these out so that only 1 assert per "it" block
-                  // And ideally, we'd make this check everything
+                  // TODO make this check everything
                   const deKinoState = await deKinoContract.getDeKinoState();
                   const interval = await deKinoContract.getInterval();
                   assert.equal(deKinoState.toString(), "0");
@@ -42,7 +40,6 @@ const { assert, expect } = require("chai");
           describe("enterDeKino", function () {
               it("reverts when you don't pay enough", async () => {
                   await expect(deKinoContract.enterDeKino()).to.be.revertedWith(
-                      // is reverted when not paid enough or lottery is not open
                       "DeKino__NotEnoughETHEntered"
                   );
               });
@@ -53,7 +50,6 @@ const { assert, expect } = require("chai");
               });
               it("emits event on enter", async () => {
                   await expect(deKinoContract.enterDeKino({ value: deKinoEntranceFee })).to.emit(
-                      // emits DeKinoEnter event if entered to index player(s) address
                       deKinoContract,
                       "DeKinoEnter"
                   );

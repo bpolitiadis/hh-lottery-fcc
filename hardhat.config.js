@@ -11,10 +11,10 @@ require("dotenv").config();
  */
 
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL;
+const RINKEBY_RPC_URL = process.env.RINKEBY_RPC_URL;
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 const DEV_PRIVATE_KEY = process.env.DEV_PRIVATE_KEY;
 const CMC_API_KEY = process.env.CMC_API_KEY;
-const RINKEBY_RPC_URL = process.env.RINKEBY_RPC_URL;
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {

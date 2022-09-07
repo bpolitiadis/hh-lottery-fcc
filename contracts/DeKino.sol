@@ -84,7 +84,7 @@ contract DeKino is VRFConsumerBaseV2, KeeperCompatibleInterface {
      * @dev This is the function that the Chainlink Keeper nodes call
      * they look for `upkeepNeeded` to return True.
      * the following should be true for this to return true:
-     * 1. The time interval has passed between raffle runs.
+     * 1. The time interval has passed between lottery runs.
      * 2. The lottery is open.
      * 3. The contract has ETH.
      * 4. Implicity, your subscription is funded with LINK.
@@ -105,7 +105,7 @@ contract DeKino is VRFConsumerBaseV2, KeeperCompatibleInterface {
         bool hasPlayers = s_players.length > 0;
         bool hasBalance = address(this).balance > 0;
         upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers);
-        //return (upkeepNeeded, "0x0"); // can we comment this out?
+        //return (upkeepNeeded, "0x0"); 
     }
 
     /**
@@ -115,9 +115,7 @@ contract DeKino is VRFConsumerBaseV2, KeeperCompatibleInterface {
     function performUpkeep(
         bytes calldata /* performData */
     ) external override {
-        // Request the random number
-        // Once we get it do something with it
-        // 2 transactions process
+        // check if upkeep is needed
         (bool upkeepNeeded, ) = checkUpkeep("");
         if (!upkeepNeeded) {
             revert DeKino__UpKeepNotNeeded(
@@ -127,6 +125,7 @@ contract DeKino is VRFConsumerBaseV2, KeeperCompatibleInterface {
             );
         }
         s_deKinoState = DeKinoState.CALCULATING;
+        // Request the random number
         uint256 requestId = i_vrfCoordinator.requestRandomWords(
             i_gasLane, //gasLane
             i_subscriptionId, //subscriptionId
@@ -134,7 +133,8 @@ contract DeKino is VRFConsumerBaseV2, KeeperCompatibleInterface {
             i_callbackGasLimit, //callback gas limit
             NUM_WORDS //number of random numbers
         );
-        //this event is redundant!
+        // act on random number
+        // this event is redundant!
         emit RequestDeKinoWinner(requestId);
     }
 
