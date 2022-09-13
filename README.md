@@ -28,7 +28,6 @@
 
 # DeKino Decentralized Lottery
 DeKino is a sample project implementing a smart contract lottery system, developed in the context of the [Full Stack Web3 Development with JavaScript – 32-Hour Course](https://www.youtube.com/watch?v=gyMwXuJrbJQ)
-#
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -75,6 +74,8 @@ Clone and build the repo
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+
+Create a .env file in the root of the project and reference the file .env.example for what needs to be provided.
 
 Deploy:
 ```sh

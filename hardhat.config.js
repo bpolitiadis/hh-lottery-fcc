@@ -11,7 +11,7 @@ require("dotenv").config();
  */
 
 const GOERLI_RPC_URL = process.env.GOERLI_RPC_URL;
-const RINKEBY_RPC_URL = process.env.RINKEBY_RPC_URL;
+const ARBITRUM_RPC_URL = process.env.ARBITRUM_RPC_URL;
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
 const DEV_PRIVATE_KEY = process.env.DEV_PRIVATE_KEY;
 const CMC_API_KEY = process.env.CMC_API_KEY;
@@ -29,7 +29,7 @@ module.exports = {
             default: 1,
         },
     },
-    defaultNetwork: "hardhat",
+    defaultNetwork: "arbitrum",
     networks: {
         goerli: {
             url: GOERLI_RPC_URL,
@@ -37,19 +37,12 @@ module.exports = {
             chainId: 5,
             blockConfirmations: 6,
         },
-        rinkeby: {
-            url: RINKEBY_RPC_URL,
+        arbitrum: {
+            url: ARBITRUM_RPC_URL,
             accounts: [DEV_PRIVATE_KEY],
-            chainId: 4,
-            blockConfirmations: 6,
-            gas: 2100000,
-            gasPrice: 8000000000,
+            chainId: 42161,
         },
         hardhat: {
-             // // If you want to do some forking, uncomment this
-            // forking: {
-            //   url: MAINNET_RPC_URL
-            // }
             chainId: 31337,
         },
         localhost: {
