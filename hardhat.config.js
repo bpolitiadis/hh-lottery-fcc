@@ -29,7 +29,7 @@ module.exports = {
             default: 1,
         },
     },
-    defaultNetwork: "arbitrum",
+    defaultNetwork: "hardhat",
     networks: {
         goerli: {
             url: GOERLI_RPC_URL,
