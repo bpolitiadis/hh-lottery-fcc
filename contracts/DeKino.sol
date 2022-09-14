@@ -52,11 +52,11 @@ contract DeKino is VRFConsumerBaseV2, KeeperCompatibleInterface {
 
     constructor(
         address vrfCoordinatorV2, //contract
-        uint256 entranceFee,
-        bytes32 gasLane,
         uint64 subscriptionId,
-        uint32 callbackGasLimit,
-        uint256 interval
+        bytes32 gasLane,
+        uint256 interval,
+        uint256 entranceFee,
+        uint32 callbackGasLimit
     ) VRFConsumerBaseV2(vrfCoordinatorV2) {
         i_entranceFee = entranceFee;
         i_vrfCoordinator = VRFCoordinatorV2Interface(vrfCoordinatorV2);
@@ -105,7 +105,7 @@ contract DeKino is VRFConsumerBaseV2, KeeperCompatibleInterface {
         bool hasPlayers = s_players.length > 0;
         bool hasBalance = address(this).balance > 0;
         upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers);
-        //return (upkeepNeeded, "0x0"); 
+        //return (upkeepNeeded, "0x0");
     }
 
     /**
